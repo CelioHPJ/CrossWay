@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # 1. Serviço do Banco de Dados
+  db:
+    image: mariadb:lts
+    container_name: ecommerce_db
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: ecommerce_db
+      MARIADB_USER: db_user
+      MARIADB_PASSWORD: db_password
+    ports:
+      - "3306:3306" # Expõe a porta padrão do MariaDB
+    volumes:
+      - mariadb_data:/var/lib/mysql # Salva os dados para não perder ao desligar o PC
+
+  # 2. Serviço do seu Backend (TypeScript/Node)
+  backend:
+    build: . # Procura um arquivo "Dockerfile" nesta mesma pasta
+    container_name: ecommerce_backend
+    restart: always
+    ports:
+      - "3000:3000" # A porta que sua API vai rodar (mude se usar outra)
+    depends_on:
+      - db # Garante que o banco suba antes do backend
+    environment:
+      # Conecta o Prisma do backend direto no container do MariaDB
+      - DATABASE_URL=mysql://db_user:db_password@db:3306/ecommerce_db
+      - PORT=3000
+
+# Declaração do volume para persistência de dados
+volumes:
+  mariadb_data:
