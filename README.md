@@ -1,6 +1,6 @@
-<<<<<<< HEAD
+
 # crest-clothing
-=======
+
 
   # E-commerce clothing website
 
@@ -12,4 +12,4 @@
 
   Run `npm run dev` to start the development server.
   
->>>>>>> ea0602d (Meu primeiro commit: subindo a aplicação)
+
