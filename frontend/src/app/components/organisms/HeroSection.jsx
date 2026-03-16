@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { Button } from "../atoms/Button.jsx";
+import { Button } from "../atoms/button.jsx";
 
 export function HeroSection({ backgroundImage }) {
   return (

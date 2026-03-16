@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Button } from "../atoms/Button.jsx";
+import { Button } from "../atoms/button.jsx";
 
 export function OrderSummary({ totalPrice }) {
   const shippingCost = totalPrice >= 200 ? 0 : 15;

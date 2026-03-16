@@ -3,7 +3,7 @@ import { useCart } from "../../context/CartContext.jsx";
 import { ShoppingBag } from "lucide-react";
 import { CartList } from "../organisms/CartList.jsx";
 import { OrderSummary } from "../organisms/OrderSummary.jsx";
-import { Button } from "../atoms/Button.jsx";
+import { Button } from "../atoms/button.jsx";
 
 export function CartPage() {
   const { items, removeFromCart, updateQuantity, totalPrice, clearCart } =

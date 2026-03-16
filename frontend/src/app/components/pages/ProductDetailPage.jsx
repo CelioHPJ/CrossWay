@@ -4,7 +4,7 @@ import { products } from "../../data/products.js";
 import { useCart } from "../../context/CartContext.jsx";
 import { ShoppingCart, ArrowLeft, Check } from "lucide-react";
 import { Image } from "../atoms/Image.jsx";
-import { Button } from "../atoms/Button.jsx";
+import { Button } from "../atoms/button.jsx";
 import { ProductGrid } from "../organisms/ProductGrid.jsx";
 
 export function ProductDetailPage() {

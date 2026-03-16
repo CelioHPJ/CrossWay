@@ -5,7 +5,7 @@ import { HeroSection } from "../organisms/HeroSection.jsx";
 import { ProductGrid } from "../organisms/ProductGrid.jsx";
 import { CategoryGrid } from "../organisms/CategoryGrid.jsx";
 import { BenefitsSection } from "../organisms/BenefitsSection.jsx";
-import { Button } from "../atoms/Button.jsx";
+import { Button } from "../atoms/button.jsx";
 
 export function HomePage() {
   const featuredProducts = products.slice(0, 4);

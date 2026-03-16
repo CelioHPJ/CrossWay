@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useCart } from "../../context/CartContext.jsx";
 import { Logo } from "../atoms/Logo.jsx";
-import { NavLink } from "../molecules/NavLink.jsx";
+import { NavLink } from "../molecules/NavLInk.jsx";
 import { CartIcon } from "../molecules/CartIcon.jsx";
 
 export function Header() {

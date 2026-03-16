@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { ShoppingCart } from "lucide-react";
-import { Badge } from "../atoms/Badge.jsx";
+import { Badge } from "../atoms/badge.jsx";
 
 export function CartIcon({ itemCount }) {
   return (
