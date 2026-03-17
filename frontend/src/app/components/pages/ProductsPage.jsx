@@ -1,10 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { products } from "../../data/products.js";
 import { ProductFilter } from "../organisms/ProductFilter.jsx";
 import { ProductGrid } from "../organisms/ProductGrid.jsx";
+import { useParams } from "react-router";
 
 export function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("Todos");
+
+  const { category } = useParams();
+
+  useEffect(() => {
+    if (category) {
+      // Capitaliza a primeira letra para bater com os dados (ex: 'camisetas' -> 'Camisetas')
+      const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+      setSelectedCategory(formattedCategory);
+    } else {
+      setSelectedCategory("Todos");
+    }
+  }, [category]);
 
   const categories = [
     "Todos",
@@ -14,7 +27,7 @@ export function ProductsPage() {
   const filteredProducts =
     selectedCategory === "Todos"
       ? products
-      : products.filter((p) => p.category === selectedCategory);
+      : products.filter((p) => p.category.toLowerCase() === selectedCategory.toLowerCase());
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

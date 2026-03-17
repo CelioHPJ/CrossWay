@@ -3,7 +3,7 @@ export const products = [
     id: 1,
     name: "Camiseta Básica Premium",
     price: 89.90,
-    image: "https://images.unsplash.com/photo-1636458938604-38cd6718ee43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwY2xvdGhpbmclMjB0c2hpcnR8ZW58MXx8fHwxNzczMTQ2NTY1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image: "https://images.unsplash.com/photo-1636458938604-38cd6718ee43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwY2xvdGhpbmclMjB0c2hpcnR8ZW58MXx8fHwxNzczMTQ2NTY1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referra",
     category: "Camisetas",
     description: "Camiseta de algodão premium, confortável e versátil para o dia a dia. Modelagem moderna e acabamento de qualidade.",
     sizes: ["P", "M", "G", "GG"],

@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+/* Importa a Orbitron no peso mais grosso possível (900) */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
+
+.fonte-black {
+  font-family: 'Orbitron', sans-serif;
+}
+/* Classe personalizada para usar no React */
+.fonte-logo {
+  font-family: 'Syncopate', sans-serif;
+}
+
+.fonte-teste {
+  font-family: 'Montserrat', sans-serif;
+}
+/* Se no futuro você quiser uma fonte diferente para os textos, pode adicionar aqui: */
+.fonte-texto {
+  font-family: 'Roboto', sans-serif;
+}

@@ -1,5 +1,5 @@
 import { RouterProvider } from "react-router";
-import { router } from "./routes";
+import { router } from "./routes.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 
 export default function App() {

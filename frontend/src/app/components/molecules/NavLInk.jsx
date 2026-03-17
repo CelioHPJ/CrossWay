@@ -5,7 +5,7 @@ export function NavLink({ to, children, onClick }) {
     <Link
       to={to}
       onClick={onClick}
-      className="text-gray-700 hover:text-gray-900 transition"
+      className="text-black hover:text-black transition"
     >
       {children}
     </Link>

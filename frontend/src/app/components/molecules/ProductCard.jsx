@@ -3,7 +3,7 @@ import { Image } from "../atoms/Image.jsx";
 
 export function ProductCard({ product }) {
   return (
-    <Link to={`/produto/${product.id}`} className="group">
+    <Link to={`/product/${product.id}`} className="group">
       <div className="relative overflow-hidden rounded-lg mb-4 aspect-square bg-gray-100">
         <Image
           src={product.image}
