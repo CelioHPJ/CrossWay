@@ -11,12 +11,8 @@ export function HomePage() {
   const featuredProducts = products.slice(0, 4);
   const categories = [
     "Camisetas",
-    "Vestidos",
     "Calças",
-    "Jaquetas",
-    "Calçados",
     "Moletons",
-    "Bermudas",
     "Suéteres",
   ];
 
