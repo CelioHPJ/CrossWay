@@ -4,11 +4,11 @@ import { AuthContext } from "./AuthContext";
 
 // IMPORTANTE: Você precisa importar o seu cliente do Supabase aqui!
 // Ajuste este caminho para onde está o seu arquivo de configuração do Supabase
-import { supabase } from "../utils/supabase/client"; 
+import { supabase } from "../../utils/supabase/client"; 
 
 export function AuthProvider({ children }) {
     // Agora só precisamos de um estado para o usuário
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);3    
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

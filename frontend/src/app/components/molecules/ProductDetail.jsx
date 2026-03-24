@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router";
-import { products } from "../../data/products.js";
 import { useCart } from "../../context/CartContext.jsx";
 import { ShoppingCart, ArrowLeft, Check } from "lucide-react";
 import { Image } from "../atoms/Image.jsx";

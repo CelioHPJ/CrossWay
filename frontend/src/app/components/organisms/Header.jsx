@@ -2,6 +2,7 @@ import { useState, useRef  } from "react";
 import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router"; // Adicionado para a busca funcionar
 import { Menu, X, Trash2, Minus, Plus, Search, ShoppingCart } from "lucide-react";
+import UserMenu from "../molecules/UserMenu.jsx";
 import { useCart } from "../../context/CartContext.jsx";
 import { Logo } from "../atoms/Logo.jsx";
 import { Input } from "../atoms/Input.jsx";
@@ -42,35 +43,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {!user && (
-              <Link to="/login">
-                  <Button
-                      variant="outline"
-                      size="sm"
-                      className="hidden md:flex h-10 md:h-12 px-6 rounded-full font-medium"
-                  >
-                      <span>Entrar</span>
-                  </Button>
-              </Link>
-          )}
-
-          {/* CASO 2: LOGADO (user) -> Mostra a bolinha com o ícone e o Menu */}
-          {user && (
-              <div className="relative hidden md:flex">
-                  <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-10 md:h-12 w-10 md:w-12 p-0 rounded-full hover:bg-gray-100"
-                      onClick={toggleMenu}
-                      ref={iconRef}
-                  >
-                      <FaUser className="h-5 w-5 text-gray-700" />
-                  </Button>
-
-                  {/* Componente que deve ter os botões "Meu Perfil" e "Sair" */}
-                  <UserMenu isOpen={isMenuOpen} ref={menuRef} />
-              </div>
-          )}
+        
         {/* =========================================
             1º ANDAR: Logo, Busca e Carrinho 
             ========================================= */}
@@ -98,7 +71,7 @@ export function Header() {
           {/* LADO DIREITO: Carrinho e Menu Mobile */}
           <div className="flex-shrink-0 flex items-center justify-end gap-4">
             {!user && (
-                            <Link to="/login">
+                            <NavLink to="/login">
                                 <Button
                                     variant="outline"
                                     size="sm"
@@ -106,7 +79,7 @@ export function Header() {
                                 >
                                     <span>Entrar</span>
                                 </Button>
-                            </Link>
+                            </NavLink>
                         )}
 
                         {user && (
