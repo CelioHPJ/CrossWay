@@ -37,22 +37,27 @@ O banco de dados relacional foi desenhado para escalabilidade, utilizando o mode
 Siga os passos abaixo para testar o projeto na sua máquina:
 
 1. **Clone o repositório**
-    git clone https://github.com/SEU_USUARIO/crest-clothing.git
+   ```bash
+    git clone https://github.com/CelioHPJ/crest-clothing.git
 
 2. **Acesse a pasta do frontend**
+   ```bash
     cd crest-clothing/frontend
 
 3. **Instale as dependências**
+   ```bash
     npm install
 
 4. **Configure as Variáveis de Ambiente**
+   
     Dentro da pasta `frontend`, crie um arquivo chamado `.env.local` e adicione suas chaves do Supabase:
-    
+    ```bash
     VITE_SUPABASE_URL=sua_url_do_supabase
     VITE_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
 
 5. **Inicie o servidor de desenvolvimento**
+   ```bash
     npm run dev
 
 ---
-*Desenvolvido por [Seu Nome](https://github.com/SEU_USUARIO).*
+*Desenvolvido por [Célio Henrique](https://github.com/CelioHPJ).*
