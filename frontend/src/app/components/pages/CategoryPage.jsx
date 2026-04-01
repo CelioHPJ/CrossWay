@@ -27,7 +27,7 @@ export function CategoryPage() {
           .from('categories') 
           .select('id')
           .ilike('name', `%${searchTerm}%`)
-          .single(); // Pega apenas um resultado
+          .maybeSingle(); // Pega apenas um resultado
 
         // Se a categoria não existir ou der erro, paramos por aqui e deixamos a lista vazia
         if (categoryError || !categoryData) {
@@ -58,12 +58,6 @@ export function CategoryPage() {
         setLoading(false);
       }
     
-      if (error) {
-        console.error("Erro ao buscar produtos da categoria:", error);
-      } else {
-        setProducts(data || []);
-      }
-      
       setLoading(false);
     }
 

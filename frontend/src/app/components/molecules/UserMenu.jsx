@@ -16,6 +16,8 @@ const UserMenu = React.forwardRef((props, ref) => {
   }
 
   const handleSignOut = async () => {
+    if (props.onClose) props.onClose();
+
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
@@ -61,6 +63,9 @@ const UserMenu = React.forwardRef((props, ref) => {
                 className="block py-2 px-6 text-base text-gray-800 
                                               transition-colors duration-200 hover:bg-gray-100"
                 to="/AdminPage"
+                onClick={() => {
+                  if (props.onClose) props.onClose();
+                }}
               >
                 Painel Administrativo
               </Link>
@@ -72,6 +77,9 @@ const UserMenu = React.forwardRef((props, ref) => {
               className="block py-2 px-6 text-base text-gray-800 
                                               transition-colors duration-200 hover:bg-gray-100"
               to="/profile"
+              onClick={() => {
+                if (props.onClose) props.onClose();
+              }}
             >
               Meu Perfil
             </Link>

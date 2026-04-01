@@ -1,4 +1,4 @@
-import { useState, useRef  } from "react";
+import { useState, useRef , useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router"; // Adicionado para a busca funcionar
 import { Menu, X, Trash2, Minus, Plus, Search, ShoppingCart } from "lucide-react";
@@ -94,7 +94,7 @@ export function Header() {
                                     <FaUser className="h-5 w-5 text-gray-700" />
                                 </Button>
 
-                                <UserMenu isOpen={isMenuOpen} ref={menuRef} />
+                                <UserMenu isOpen={isMenuOpen} ref={menuRef} onClose={() => setIsMenuOpen(false)}/>
                             </div>
                         )}
             {/* INÍCIO DO CARRINHO (SHEET) */}
