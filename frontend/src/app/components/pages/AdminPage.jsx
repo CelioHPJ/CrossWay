@@ -18,6 +18,9 @@ export function AdminPage() {
   // --- ESTADOS DO FORMULÁRIO (Adiciona os teus outros campos aqui se necessário) ---
   const [nome, setNome] = useState("");
   const [preco, setPreco] = useState("");
+  const [categoria , setCategoria] = useState("");
+  const [descricao , setDescricao ] = useState("");
+  const [image_url , setImage ] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [buscaAdmin, setBuscaAdmin] = useState("");
   const produtosFiltrados = productList.filter((produto) =>
@@ -30,7 +33,7 @@ export function AdminPage() {
         setIsLoadingList(true);
         const { data, error } = await supabase
           .from("products")
-          .select("*")
+          .select("*,categories(name)")
           .order("created_at", { ascending: false });
 
         if (error) throw error;
@@ -52,13 +55,20 @@ export function AdminPage() {
   useEffect(() => {
     if (activeView === "formulario") {
       if (produtoEmEdicao) {
-        // MODO EDIÇÃO: Preenche com os dados do banco
         setNome(produtoEmEdicao.name || "");
-        setPreco(produtoEmEdicao.price ? produtoEmEdicao.price.toString() : "");
+        setCategoria(produtoEmEdicao.categories?.name || "");
+        setDescricao(produtoEmEdicao.description || "");
+        setImage(produtoEmEdicao.image_url || "");
+        
+        const valorFormatadoInicial = new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        }).format(produtoEmEdicao.price || 0);
+        
+        setPreco(valorFormatadoInicial);
       } else {
-        // MODO CRIAÇÃO: Limpa tudo
         setNome("");
-        setPreco("");
+        setPreco(""); // Se quiser, pode deixar como "R$ 0,00" inicial aqui
       }
     }
   }, [activeView, produtoEmEdicao]);
@@ -70,9 +80,10 @@ export function AdminPage() {
 
     try {
       // Prepara o objeto com os dados (Ajusta os nomes das colunas conforme a tua tabela)
+      const precoLimpo = Number(preco.replace(/\D/g, "")) / 100;
       const dadosProduto = {
         name: nome,
-        price: parseFloat(preco),
+        price: parseFloat(precoLimpo),
         // category_id: 1, <-- Exemplo de outros campos que possas ter
       };
 
@@ -121,6 +132,18 @@ export function AdminPage() {
       toast.error("Não foi possível apagar o produto.");
     }
   };
+  const handlePrecoChange = (e) =>{
+    let valor = e.target.value;
+    valor = valor.replace(/\D/g,"");
+
+    const numero = Number(valor) /100;
+    const valorFormatado = new Intl.NumberFormat("pt-BR",{
+    style:"currency",
+    currency:"BRL",
+  }).format(numero);
+
+  setPreco(valorFormatado);
+}
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -231,14 +254,51 @@ export function AdminPage() {
              <div>
                <label className="block text-sm font-medium text-gray-700 mb-1">Preço (R$)</label>
                <input 
-                 type="number" 
-                 step="0.01"
+                 type="text" 
+                 inputMode = "numeric"
                  required
                  value={preco}
-                 onChange={(e) => setPreco(e.target.value)}
+                 onChange={handlePrecoChange}
                  className="w-full border border-gray-300 rounded-md p-2 focus:ring-black focus:border-black"
-                 placeholder="Ex: 89.90"
+                 placeholder="Ex: 89,90"
                />
+             </div>
+             <div>
+              <label className = "block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+               <select
+                 type="text"
+                 required
+                 value={categoria}
+                 onChange={(e) => setCategoria(e.target.value)}
+                 className = "w-full border border-gray-300 rounded-md p-2 focus:ring-black focus:border-black"
+                 placeholder = "Selecione..."
+                >
+                  <option value= "Camisetas "> Camiseta </option>
+                  <option value= "Calças">Calça</option>
+                  <option value= "Moletons">Moletom</option>
+                </select>
+             </div>
+             <div>
+              <label className = "block text-sm font-medium text-gray-700 mb-1" > Descrição </label>
+              <input
+                 type = "text"
+                 required
+                 value={descricao}
+                 onChange = {(e) => setDescricao(e.target.value)}
+                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-black focus:border-black"
+                 placeholder = "Ex: Moletom quente, felpado por dentro e com capuz ajustável."
+              />
+             </div>
+              <div>
+              <label className = "block text-sm font-medium text-gray-700 mb-1">Imagem do Produto</label>
+               <input
+                 type="text"
+                 required
+                 value={image_url}
+                 onChange={(e) => setImage(e.target.value)}
+                 className = "w-full border border-gray-300 rounded-md p-2 focus:ring-black focus:border-black"
+                
+                />
              </div>
 
              {/* Se tiveres mais campos (Categoria, Imagem, Descrição), adiciona-os aqui seguindo o mesmo padrão */}

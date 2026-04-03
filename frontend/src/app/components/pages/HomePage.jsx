@@ -43,8 +43,7 @@ export function HomePage() {
   const categories = [
     "Camisetas",
     "Calças",
-    "Moletons",
-    "Suéteres",
+    "Moletons"
   ];
 
   return (
