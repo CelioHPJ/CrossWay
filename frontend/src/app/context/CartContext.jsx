@@ -1,12 +1,21 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const CartContext = createContext(undefined);
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+  // 🌟 PERSISTÊNCIA: Inicializa tentando ler do LocalStorage
+  const [items, setItems] = useState(() => {
+    const savedItems = localStorage.getItem("crossway_cart");
+    return savedItems ? JSON.parse(savedItems) : [];
+  });
+
+  // 🌟 PERSISTÊNCIA: Salva no LocalStorage sempre que 'items' mudar
+  useEffect(() => {
+    localStorage.setItem("crossway_cart", JSON.stringify(items));
+  }, [items]);
 
   const addToCart = (product, size, color) => {
-    // 1. Descobre o stock real da variante que o cliente escolheu
+    // 1. Descobre o stock real da variante selecionada
     const varianteSelecionada = product.product_variants?.find(
       (v) => v.size === size && v.color === color
     );
@@ -20,11 +29,11 @@ export function CartProvider({ children }) {
           item.selectedColor === color
       );
 
-      // 2. Se já tem no carrinho, verifica se pode somar mais 1
+      // 2. Se já tem no carrinho, verifica limite de estoque
       if (existingItem) {
         if (existingItem.quantity >= stockDisponivel) {
-          alert(`Temos apenas ${stockDisponivel} unidade(s) deste tamanho e cor em stock.`);
-          return prevItems; // Aborta e não altera o carrinho
+          alert(`Temos apenas ${stockDisponivel} unidade(s) deste tamanho e cor em estoque.`);
+          return prevItems;
         }
 
         return prevItems.map((item) =>
@@ -36,26 +45,27 @@ export function CartProvider({ children }) {
         );
       }
 
-      // 3. Se é o primeiro a ser adicionado, barra se o stock for 0
+      // 3. Se é o primeiro a ser adicionado
       if (stockDisponivel < 1) {
         alert("Desculpe, este produto esgotou nesta variação.");
         return prevItems;
       }
 
-      return [...prevItems, { ...product, quantity: 1, selectedSize: size, selectedColor: color }];
+      return [
+        ...prevItems, 
+        { ...product, quantity: 1, selectedSize: size, selectedColor: color }
+      ];
     });
   };
 
-  // ATUALIZAÇÃO: Agora precisa do tamanho e cor para não excluir a roupa errada
-  const removeFromCart = (productId) => {
+  const removeFromCart = (productId, size, color) => {
     setItems((prevItems) => 
       prevItems.filter(
-        (item) => !(item.id === productId )
+        (item) => !(item.id === productId && item.selectedSize === size && item.selectedColor === color)
       )
     );
   };
 
-  // ATUALIZAÇÃO: Bloqueia quantidades acima do estoque e atualiza pela variação correta
   const updateQuantity = (productId, size, color, quantity) => {
     if (quantity <= 0) {
       removeFromCart(productId, size, color);
@@ -96,7 +106,7 @@ export function CartProvider({ children }) {
   return (
     <CartContext.Provider
       value={{
-        items,
+        items, // O Header deve usar 'items' ou 'items.length'
         addToCart,
         removeFromCart,
         updateQuantity,

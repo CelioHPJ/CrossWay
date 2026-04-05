@@ -5,7 +5,7 @@ export function CartItemCard({ item, onRemove, onUpdateQuantity }) {
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6 flex gap-6">
       <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-        <Image src={item.image} alt={item.name} />
+        <Image src={item.image_url || item.image} alt={item.name} />
       </div>
 
       <div className="flex-1">
@@ -15,7 +15,7 @@ export function CartItemCard({ item, onRemove, onUpdateQuantity }) {
             <p className="text-gray-600">{item.category}</p>
           </div>
           <button
-            onClick={() => onRemove(item.id)}
+            onClick={() => onRemove(item.id,item.selectedSize, item.selectedColor)}
             className="text-red-600 hover:text-red-800 transition"
           >
             <Trash2 className="w-5 h-5" />
@@ -30,7 +30,7 @@ export function CartItemCard({ item, onRemove, onUpdateQuantity }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+              onClick={() => onUpdateQuantity(item.id,item.selectedSize,item.selectedColor, item.quantity - 1)}
               className="w-8 h-8 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-100 transition"
             >
               <Minus className="w-4 h-4" />
@@ -39,7 +39,7 @@ export function CartItemCard({ item, onRemove, onUpdateQuantity }) {
               {item.quantity}
             </span>
             <button
-              onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+              onClick={() => onUpdateQuantity(item.id,item.selectedSize,item.selectedColor, item.quantity + 1)}
               className="w-8 h-8 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-100 transition"
             >
               <Plus className="w-4 h-4" />

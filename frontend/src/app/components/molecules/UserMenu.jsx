@@ -45,7 +45,7 @@ const UserMenu = React.forwardRef((props, ref) => {
           className="user-avatar w-12 h-12 bg-vermelho-botao rounded-full 
                                 flex items-center justify-center text-vermelho-botao text-xl mr-4"
         >
-          <FaUser color="#ba2025" />
+          <FaUser color="#000000" />
         </div>
         <div className="user-info flex flex-col">
           <span className="user-name font-bold text-lg text-gray-900">

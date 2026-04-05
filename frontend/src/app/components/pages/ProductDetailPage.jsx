@@ -64,7 +64,7 @@ export function ProductDetailPage() {
 
   const handleAddToCart = () => {
     // Só validamos se existirem tamanhos ou cores para escolher
-    if ((sizes.length > 0 && !selectedSize) || (colors.length > 0 && !selectedColor)) {
+    if ((size.length > 0 && !selectedSize) || (color.length > 0 && !selectedColor)) {
       alert("Por favor, selecione um tamanho e uma cor");
       return;
     }
@@ -75,8 +75,8 @@ export function ProductDetailPage() {
   };
 
   // Garante que arrays existam mesmo se o banco não devolver nada
-  const sizes = product.sizes || [];
-  const colors = product.colors || [];
+  const size = product?.size || [];
+  const color = product?.color || [];
 
   // 🌟 CORREÇÃO AQUI: Lemos 'image_url' e colocamos a foto de segurança se estiver vazio
   const imagemSegura = product.image_url || "https://placehold.co/600x600/eeeeee/999999?text=Sem+Foto";
@@ -114,7 +114,7 @@ export function ProductDetailPage() {
           <div className="mb-6">
             <label className="block font-semibold mb-3">Tamanho:</label>
             <div className="flex flex-wrap gap-3">
-              {sizes.length > 0 ? sizes.map((size) => (
+              {size.length > 0 ? size.map((size) => (
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
@@ -134,7 +134,7 @@ export function ProductDetailPage() {
           <div className="mb-8">
             <label className="block font-semibold mb-3">Cor:</label>
             <div className="flex flex-wrap gap-3">
-              {colors.length > 0 ? colors.map((color) => (
+              {color.length > 0 ? color.map((color) => (
                 <button
                   key={color}
                   onClick={() => setSelectedColor(color)}

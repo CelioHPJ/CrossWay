@@ -33,7 +33,7 @@ export function OrderSummary({ totalPrice }) {
       </Button>
 
       <Link
-        to="/produtos"
+        to="/products"
         className="block text-center text-gray-600 hover:text-gray-900 transition"
       >
         Continuar Comprando
