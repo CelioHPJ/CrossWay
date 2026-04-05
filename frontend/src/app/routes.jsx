@@ -10,6 +10,7 @@ import { UserPage } from "./components/pages/UserPage";
 import { AdminPage } from "./components/pages/AdminPage";
 import { AdminRoute } from "./components/atoms/AdminRoute";
 import { CategoryPage } from "./components/pages/CategoryPage";
+import { CheckoutPage } from "./components/pages/CheckoutPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: "/login", element: <LoginPage /> },
       { path: "/signup", element: <SignupPage /> },
       { path: "/profile", element: <UserPage /> },
+      { path: "/checkout" , element: <CheckoutPage /> },
       {path: "/AdminPage", element: <AdminRoute><AdminPage /></AdminRoute> }
     ],
   },

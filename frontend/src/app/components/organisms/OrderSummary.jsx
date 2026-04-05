@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { Button } from "../atoms/button.jsx";
+import { NavLink } from "../molecules/NavLink.jsx";
 
 export function OrderSummary({ totalPrice }) {
   const shippingCost = totalPrice >= 200 ? 0 : 15;
@@ -28,9 +29,12 @@ export function OrderSummary({ totalPrice }) {
         </div>
       </div>
 
-      <Button variant="primary" size="large" className="w-full mb-4">
+      <NavLink to = "/checkout">
+<Button variant="primary" size="large" className="w-full mb-4">
         Fechar Pedido
       </Button>
+      </NavLink>
+      
 
       {totalPrice < 200 && (
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
