@@ -43,8 +43,7 @@ export function HomePage() {
   const categories = [
     "Camisetas",
     "Calças",
-    "Moletons",
-    "Suéteres",
+    "Moletons"
   ];
 
   return (
@@ -54,8 +53,8 @@ export function HomePage() {
       {/* Featured Products */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Produtos em Destaque</h2>
-          <p className="text-gray-600 text-lg">
+          <h2 className="text-4xl font-medium mb-4">Produtos em Destaque</h2>
+          <p className="text-gray-700 text-lg">
             Confira nossa seleção especial de produtos
           </p>
         </div>
@@ -69,14 +68,23 @@ export function HomePage() {
           <ProductGrid products={featuredProducts} columns={4} />
         )}
 
-        <div className="text-center mt-12">
-          <Link to="/products">
-            <Button variant="secondary" size="large">
-              Ver Todos os Produtos
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </Link>
-        </div>
+  <div className="text-center mt-20">
+  <Link to="/products" className="inline-block group">
+    <Button 
+      variant="ghost" 
+      className="relative px-10 py-8 border border-black rounded-none overflow-hidden transition-all duration-500 hover:text-white"
+    >
+      {/* Camada de fundo que sobe no hover */}
+      <span className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+      
+      {/* Conteúdo do botão (precisa de z-10 para ficar acima do fundo) */}
+      <span className="relative z-10 flex items-center text-sm font-medium tracking-[0.2em] uppercase">
+        Ver Todos os Produtos
+        <ArrowRight className="ml-3 w-4 h-4 transition-transform duration-300 group-hover:translate-x-2" />
+      </span>
+    </Button>
+  </Link>
+</div>
       </section>
 
       <CategoryGrid categories={categories} />

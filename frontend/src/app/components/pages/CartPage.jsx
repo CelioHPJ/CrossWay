@@ -18,7 +18,7 @@ export function CartPage() {
           <p className="text-gray-600 mb-8 text-lg">
             Adicione produtos ao carrinho para continuar comprando
           </p>
-          <Link to="/produtos">
+          <Link to="/products">
             <Button variant="primary" size="large">
               Ver Produtos
             </Button>
@@ -30,7 +30,7 @@ export function CartPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-8">Carrinho de Compras</h1>
+      <h1 className="text-4xl font-medium mb-8">Carrinho de Compras</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">

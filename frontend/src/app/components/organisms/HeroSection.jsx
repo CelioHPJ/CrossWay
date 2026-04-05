@@ -12,7 +12,7 @@ export function HeroSection({ backgroundImage }) {
       />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
         <h1 className="text-4xl sm:text-5xl font-bold mb-6">
-       "Vestiu-me com as vestes da salvação."
+          "Vestiu-me com as vestes da salvação."
         </h1>
         <p className="text-xl mb-8 max-w-2xl">
           -Isaías 61:10

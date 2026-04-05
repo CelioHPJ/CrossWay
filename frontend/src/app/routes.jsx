@@ -7,7 +7,9 @@ import { CartPage } from "./components/pages/CartPage";
 import { LoginPage } from "./components/pages/LoginPage";
 import { SignupPage } from "./components/pages/SignupPage";
 import { UserPage } from "./components/pages/UserPage";
-
+import { AdminPage } from "./components/pages/AdminPage";
+import { AdminRoute } from "./components/atoms/AdminRoute";
+import { CategoryPage } from "./components/pages/CategoryPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -16,11 +18,12 @@ export const router = createBrowserRouter([
       { path: "/", element: <HomePage /> },
       { path: "/products", element: <ProductsPage /> },
       { path: "/product/:id", element: <ProductDetailPage /> },
-      { path: "/products/:category", element: <ProductsPage /> },
+      { path: "/products/:slug", element: <CategoryPage /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/login", element: <LoginPage /> },
       { path: "/signup", element: <SignupPage /> },
       { path: "/profile", element: <UserPage /> },
+      {path: "/AdminPage", element: <AdminRoute><AdminPage /></AdminRoute> }
     ],
   },
 ]);

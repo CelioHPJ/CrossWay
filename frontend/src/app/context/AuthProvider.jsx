@@ -1,49 +1,66 @@
-// AuthProvider.jsx
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-
-// IMPORTANTE: Você precisa importar o seu cliente do Supabase aqui!
-// Ajuste este caminho para onde está o seu arquivo de configuração do Supabase
 import { supabase } from "../../utils/supabase/client"; 
 
 export function AuthProvider({ children }) {
-    // Agora só precisamos de um estado para o usuário
-    const [user, setUser] = useState(null);3    
+    const [user, setUser] = useState(null);    
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // 1. Pega o usuário logado no momento em que a página carrega
-        const getInitialSession = async () => {
+        // Função limpa para buscar a sessão e o cargo de uma vez só
+        const fetchSessionAndRole = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             
-            // Se tiver sessão, salva o usuário. Se não, fica nulo.
-            setUser(session?.user || null);
+            if (session?.user) {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('role')
+                    .eq('id', session.user.id)
+                    .single();
+
+                // 🔍 O RAIO-X DEFINITIVO: Veja o que aparece no console!
+                console.log("📦 DADOS QUE VIERAM DO BANCO:", data);
+
+                if (data) {
+                    // Adiciona o cargo ao usuário. Usamos o trim() e toUpperCase() para forçar 
+                    // a palavra a ficar limpa, removendo espaços acidentais e minúsculas!
+                    const cargoLimpo = data.role ? String(data.role).trim().toUpperCase() : "CUSTOMER";
+                    setUser({ ...session.user, role: cargoLimpo });
+                } else {
+                    setUser(session.user);
+                }
+            } else {
+                setUser(null);
+            }
+            
             setLoading(false);
         };
 
-        getInitialSession();
+        // Chama a função assim que o site abre
+        fetchSessionAndRole();
 
-        // 2. Fica "escutando" em tempo real (se o cara logar ou deslogar noutra aba)
-        const { data: authListener } = supabase.auth.onAuthStateChange(
-            (event, session) => {
-                setUser(session?.user || null);
-                setLoading(false);
+        // Fica de olho se o utilizador fizer login/logout noutra aba
+        const { data: authListener } = supabase.auth.onAuthStateChange((event) => {
+            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+                fetchSessionAndRole();
             }
-        );
+        });
 
-        // Limpeza de segurança quando o componente desmontar
-        return () => {
-            authListener.subscription.unsubscribe();
-        };
+        return () => authListener.subscription.unsubscribe();
     }, []);
 
-    // O valor que será distribuído para o site inteiro (como o seu Header!)
-    const value = { user, loading };
-
     return (
-        <AuthContext.Provider value={value}>
-            {/* Só mostra o site depois de descobrir se o usuário está logado ou não */}
-            {!loading && children}
+        <AuthContext.Provider value={{ user, loading }}>
+            {loading ? (
+                <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
+                    <div className="text-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-black mx-auto mb-4"></div>
+                        <p className="text-gray-600 font-medium">Carregando a loja...</p>
+                    </div>
+                </div>
+            ) : (
+                children
+            )}
         </AuthContext.Provider>
     );
 }

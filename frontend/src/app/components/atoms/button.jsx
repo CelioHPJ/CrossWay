@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-
+import { forwardRef } from "react";
 import { cn } from "./utils.js";
 
 const buttonVariants = cva(
@@ -34,22 +34,23 @@ const buttonVariants = cva(
   }
 );
 
-function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
-}) {
-  const Comp = asChild ? Slot : "button";
+// --- ALTERAÇÃO AQUI: Envelopando com forwardRef ---
+const Button = forwardRef(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
 
-  return (
-    <Comp
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  );
-}
+    return (
+      <Comp
+        data-slot="button"
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref} // Passando a referência para a tag final
+        {...props}
+      />
+    );
+  }
+);
+
+// Boa prática para o React DevTools não se perder com componentes anônimos
+Button.displayName = "Button";
 
 export { Button, buttonVariants };
