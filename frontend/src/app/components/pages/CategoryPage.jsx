@@ -67,7 +67,7 @@ export function CategoryPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="mb-10 text-center">
         {/* Título dinâmico que fica com a primeira letra maiúscula */}
-        <h1 className="text-4xl font-bold text-gray-900 capitalize">
+        <h1 className="text-4xl font-medium text-gray-900 capitalize">
           {slug.replace(/-/g, " ")}
         </h1>
         <p className="mt-4 text-gray-600">

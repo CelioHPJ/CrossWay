@@ -2,6 +2,7 @@ import React from "react";
 import { X, Gift, ShoppingBag, Trash2 } from "lucide-react";
 import { useCart } from "../../context/CartContext"; // Ajuste o caminho se necessário
 import { SheetContent, SheetHeader, SheetTitle, SheetClose } from "../atoms/sheet"; // Seus componentes de UI
+import { NavLink } from "../molecules/NavLink";
 
 export function CartDrawer() {
   const { items, totalPrice, updateQuantity, removeFromCart } = useCart();
@@ -100,10 +101,12 @@ export function CartDrawer() {
             R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
           </p>  
         </div>
-        
-        <button className="w-full bg-gray-950 text-white font-medium text-base py-5 tracking-widest hover:bg-gray-800 transition-colors uppercase">
+        <NavLink to="/cart">
+<button className="w-full bg-gray-950 text-white font-medium text-base py-5 tracking-widest hover:bg-gray-800 transition-colors uppercase">
           Finalizar Compra
         </button>
+        </NavLink>
+        
         
         <SheetClose asChild>
           <button className="w-full text-center mt-6 text-gray-950 font-light text-sm underline underline-offset-4 hover:text-gray-600 transition">

@@ -29,15 +29,8 @@ export function OrderSummary({ totalPrice }) {
       </div>
 
       <Button variant="primary" size="large" className="w-full mb-4">
-        Finalizar Compra
+        Fechar Pedido
       </Button>
-
-      <Link
-        to="/products"
-        className="block text-center text-gray-600 hover:text-gray-900 transition"
-      >
-        Continuar Comprando
-      </Link>
 
       {totalPrice < 200 && (
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">

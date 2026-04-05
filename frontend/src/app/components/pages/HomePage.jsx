@@ -53,8 +53,8 @@ export function HomePage() {
       {/* Featured Products */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Produtos em Destaque</h2>
-          <p className="text-gray-600 text-lg">
+          <h2 className="text-4xl font-medium mb-4">Produtos em Destaque</h2>
+          <p className="text-gray-700 text-lg">
             Confira nossa seleção especial de produtos
           </p>
         </div>
@@ -72,7 +72,7 @@ export function HomePage() {
   <Link to="/products" className="inline-block group">
     <Button 
       variant="ghost" 
-      className="relative px-12 py-7 border border-black rounded-none overflow-hidden transition-all duration-500 hover:text-white"
+      className="relative px-10 py-8 border border-black rounded-none overflow-hidden transition-all duration-500 hover:text-white"
     >
       {/* Camada de fundo que sobe no hover */}
       <span className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />

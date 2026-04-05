@@ -15,7 +15,7 @@ export function CartList({ items, onRemoveItem, onUpdateQuantity, onClearCart })
       {items.length > 0 && (
         <button
           onClick={onClearCart}
-          className="text-red-600 hover:text-red-800 font-medium transition"
+          className="text-black font-medium transition"
         >
           Limpar Carrinho
         </button>
