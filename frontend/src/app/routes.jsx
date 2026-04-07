@@ -11,6 +11,7 @@ import { AdminPage } from "./components/pages/AdminPage";
 import { AdminRoute } from "./components/atoms/AdminRoute";
 import { CategoryPage } from "./components/pages/CategoryPage";
 import { CheckoutPage } from "./components/pages/CheckoutPage";
+import { SuccessPage } from "./components/pages/SuccessPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
       { path: "/signup", element: <SignupPage /> },
       { path: "/profile", element: <UserPage /> },
       { path: "/checkout" , element: <CheckoutPage /> },
+      { path: "/success" , element: <SuccessPage /> },
       {path: "/AdminPage", element: <AdminRoute><AdminPage /></AdminRoute> }
     ],
   },

@@ -72,31 +72,65 @@ export const cartApi = {
   },
 };
 
-// Orders API
+// Orders API (MOCKED VIA LOCALSTORAGE DEVIDO A QUEDA DA API REMOTA GGP...)
 export const ordersApi = {
   // Create order
   create: async (userId, items, total) => {
-    return await apiRequest("/orders", {
-      method: "POST",
-      body: JSON.stringify({ userId, items, total }),
+    return new Promise((resolve) => {
+      // Simula uma viagem ao banco
+      setTimeout(() => {
+        const memoryOrders = JSON.parse(localStorage.getItem('mock_orders') || '[]');
+        const newOrder = {
+          orderId: "PED-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
+          userId,
+          status: "PENDING",
+          items: items.map(i => ({ ...i, productId: i.id, paidUnitPrice: i.price })),
+          totalAmount: total,
+          orderedAt: new Date().toISOString()
+        };
+        memoryOrders.push(newOrder);
+        localStorage.setItem('mock_orders', JSON.stringify(memoryOrders));
+        resolve({ orderId: newOrder.orderId, status: "PENDING" });
+      }, 500);
     });
   },
 
   // Get order by ID
   getById: async (orderId) => {
-    return await apiRequest(`/orders/${orderId}`);
+    return new Promise((resolve, reject) => {
+      const memoryOrders = JSON.parse(localStorage.getItem('mock_orders') || '[]');
+      const order = memoryOrders.find(o => o.orderId === orderId);
+      if (order) resolve(order);
+      else reject(new Error("Pedido não encontrado no simulador offline"));
+    });
   },
 
   // Get user orders
   getUserOrders: async (userId) => {
-    return await apiRequest(`/users/${userId}/orders`);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const memoryOrders = JSON.parse(localStorage.getItem('mock_orders') || '[]');
+        // Pega do mais pro mais antigo
+        const userOrders = memoryOrders.filter(o => o.userId === userId).reverse();
+        resolve(userOrders);
+      }, 400);
+    });
   },
 
   // Update order status
   updateStatus: async (orderId, status) => {
-    return await apiRequest(`/orders/${orderId}/status`, {
-      method: "PUT",
-      body: JSON.stringify({ status }),
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const memoryOrders = JSON.parse(localStorage.getItem('mock_orders') || '[]');
+        const orderIndex = memoryOrders.findIndex(o => o.orderId === orderId);
+        if (orderIndex >= 0) {
+          memoryOrders[orderIndex].status = status;
+          localStorage.setItem('mock_orders', JSON.stringify(memoryOrders));
+          resolve(memoryOrders[orderIndex]);
+        } else {
+          reject(new Error("Pedido não encontrado na memória LocalStorage"));
+        }
+      }, 300);
     });
   },
 };
