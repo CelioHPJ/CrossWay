@@ -4,6 +4,7 @@ import { useCart } from "../../context/CartContext.jsx";
 import { ShoppingCart, ArrowLeft, Check } from "lucide-react";
 // 🌟 IMPORTAÇÃO NOVA: O nosso serviço para falar com o Supabase
 import { productsService } from "../../services/productsService.js";
+import { toast } from "sonner";
 
 export function ProductDetail() {
   const { id } = useParams();
@@ -68,7 +69,7 @@ export function ProductDetail() {
     // NOTA: Se os teus produtos no Supabase não tiverem as colunas 'sizes' e 'colors', 
     // podes ter de remover esta validação no futuro, mas por enquanto vamos manter.
     if (!selectedSize || !selectedColor) {
-      alert("Por favor, selecione um tamanho e uma cor");
+      toast.warning("Por favor, selecione um tamanho e uma cor");
       return;
     }
 

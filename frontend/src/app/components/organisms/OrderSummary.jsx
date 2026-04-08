@@ -29,12 +29,14 @@ export function OrderSummary({ totalPrice }) {
         </div>
       </div>
 
-      <NavLink to = "/checkout">
-<Button variant="primary" size="large" className="w-full mb-4">
-        Fechar Pedido
-      </Button>
+      <NavLink to="/checkout">
+        <Button
+          className="w-full mb-4 from-black to-black hover:from-black hover:to-black text-white font-bold py-6 rounded-xl"
+        >
+          <span>Fechar Pedido</span>
+        </Button>
       </NavLink>
-      
+
 
       {totalPrice < 200 && (
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">

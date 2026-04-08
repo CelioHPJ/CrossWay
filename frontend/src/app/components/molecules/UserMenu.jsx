@@ -49,7 +49,7 @@ const UserMenu = React.forwardRef((props, ref) => {
         </div>
         <div className="user-info flex flex-col">
           <span className="user-name font-bold text-lg text-gray-900">
-            {user?.user_metadata?.full_name || "Usuário"}
+            {user?.user_metadata?.name || user?.name || "Usuário"}
           </span>
         </div>
       </div>

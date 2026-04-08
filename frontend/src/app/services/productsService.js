@@ -60,13 +60,42 @@ export const productsService = {
       cores = Array.from(colorSet);
     }
 
-    // Retornamos um objeto único que o React entende perfeitamente
     return {
       ...data,
       category: data.categories?.name || "Sem categoria",
-      size: tamanhos, // Nomeado como 'sizes' para bater com o seu Componente
-      color: cores,   // Nomeado como 'colors' para bater com o seu Componente
+      size: tamanhos, 
+      color: cores,   
       variants: data.product_variants
     };
+  },
+
+  // 3. Atualiza / Diminui o estoque após a compra
+  decreaseStock: async (cartItems) => {
+    try {
+      for (const item of cartItems) {
+        // Encontra a variação do produto no estoque atual para saber o número certo
+        const { data: variant, error } = await supabase
+          .from('product_variants')
+          .select('stock')
+          .eq('product_id', item.id)
+          .eq('size', item.selectedSize)
+          .eq('color', item.selectedColor)
+          .single();
+
+        if (variant && !error) {
+          const newStock = Math.max(0, variant.stock - item.quantity); // Nunca deixa negativo
+          
+          // Edita a tabela com o novo valor
+          await supabase
+            .from('product_variants')
+            .update({ stock: newStock })
+            .eq('product_id', item.id)
+            .eq('size', item.selectedSize)
+            .eq('color', item.selectedColor);
+        }
+      }
+    } catch (err) {
+      console.error("Erro interno ao baixar estoque:", err);
+    }
   }
 };

@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 // IMPORTAÇÃO NOVA: O serviço do Supabase
-import { productsService } from "../../services/productsService"; 
+import { productsService } from "../../services/productsService";
 import { useCart } from "../../context/CartContext.jsx";
 import { ShoppingCart, ArrowLeft, Check } from "lucide-react";
 import { Image } from "../atoms/Image.jsx";
 import { Button } from "../atoms/button.jsx";
 import { ProductGrid } from "../organisms/ProductGrid.jsx";
+import { toast } from "sonner";
 
 export function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  
+
   // Estados para gerenciar o produto vindo do banco
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -36,7 +37,7 @@ export function ProductDetailPage() {
           .filter((p) => p.category === data.category && p.id !== data.id)
           .slice(0, 4);
         setRelatedProducts(related);
-        
+
       } catch (error) {
         console.error("Erro ao buscar detalhes:", error);
       } finally {
@@ -45,7 +46,7 @@ export function ProductDetailPage() {
     };
 
     fetchProductDetails();
-  }, [id]); 
+  }, [id]);
 
   if (loading) {
     return <div className="text-center py-20 text-gray-500 text-lg">Carregando detalhes do produto...</div>;
@@ -65,10 +66,10 @@ export function ProductDetailPage() {
   const handleAddToCart = () => {
     // Só validamos se existirem tamanhos ou cores para escolher
     if ((size.length > 0 && !selectedSize) || (color.length > 0 && !selectedColor)) {
-      alert("Por favor, selecione um tamanho e uma cor");
+      toast.warning("Por favor, selecione um tamanho e uma cor");
       return;
     }
-    
+
     addToCart(product, selectedSize, selectedColor);
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
@@ -92,7 +93,7 @@ export function ProductDetailPage() {
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        
+
         {/* 🌟 CORREÇÃO AQUI: Passamos a imagemSegura para o componente */}
         <div className="relative overflow-hidden rounded-lg aspect-square bg-gray-100">
           <Image src={imagemSegura} alt={product.name} />
@@ -101,7 +102,7 @@ export function ProductDetailPage() {
         <div>
           <p className="text-gray-600 mb-2">{product.category}</p>
           <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
-          
+
           <p className="text-3xl font-bold mb-6">
             R$ {Number(product.price || 0).toFixed(2)}
           </p>
@@ -118,11 +119,10 @@ export function ProductDetailPage() {
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`w-16 h-12 border-2 rounded-lg font-medium transition ${
-                    selectedSize === size
+                  className={`w-16 h-12 border-2 rounded-lg font-medium transition ${selectedSize === size
                       ? "border-gray-900 bg-gray-900 text-white"
                       : "border-gray-300 hover:border-gray-900"
-                  }`}
+                    }`}
                 >
                   {size}
                 </button>
@@ -138,11 +138,10 @@ export function ProductDetailPage() {
                 <button
                   key={color}
                   onClick={() => setSelectedColor(color)}
-                  className={`px-6 py-3 border-2 rounded-lg font-medium transition ${
-                    selectedColor === color
+                  className={`px-6 py-3 border-2 rounded-lg font-medium transition ${selectedColor === color
                       ? "border-gray-900 bg-gray-900 text-white"
                       : "border-gray-300 hover:border-gray-900"
-                  }`}
+                    }`}
                 >
                   {color}
                 </button>
@@ -152,9 +151,7 @@ export function ProductDetailPage() {
 
           <Button
             onClick={handleAddToCart}
-            variant="primary"
-            size="large"
-            className="w-full mb-4"
+            className="w-full mb-4 from-black to-black hover:from-black hover:to-black text-white font-bold py-6 rounded-xl"
           >
             <ShoppingCart className="w-5 h-5" />
             Adicionar ao Carrinho

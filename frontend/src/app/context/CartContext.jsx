@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const CartContext = createContext(undefined);
 
@@ -32,7 +33,7 @@ export function CartProvider({ children }) {
       // 2. Se já tem no carrinho, verifica limite de estoque
       if (existingItem) {
         if (existingItem.quantity >= stockDisponivel) {
-          alert(`Temos apenas ${stockDisponivel} unidade(s) deste tamanho e cor em estoque.`);
+          toast.warning(`Temos apenas ${stockDisponivel} unidade(s) deste tamanho em estoque.`);
           return prevItems;
         }
 
@@ -47,7 +48,7 @@ export function CartProvider({ children }) {
 
       // 3. Se é o primeiro a ser adicionado
       if (stockDisponivel < 1) {
-        alert("Desculpe, este produto esgotou nesta variação.");
+        toast.error("Desculpe, este produto esgotou nesta variação.");
         return prevItems;
       }
 
@@ -82,7 +83,7 @@ export function CartProvider({ children }) {
           const stockDisponivel = varianteSelecionada ? varianteSelecionada.stock : 0;
 
           if (quantity > stockDisponivel) {
-            alert(`Limite atingido. Temos apenas ${stockDisponivel} unidade(s) disponíveis.`);
+            toast.warning(`Limite atingido. Temos apenas ${stockDisponivel} unidade(s) disponíveis.`);
             return { ...item, quantity: stockDisponivel };
           }
 

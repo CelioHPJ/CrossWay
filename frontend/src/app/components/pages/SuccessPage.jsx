@@ -4,17 +4,23 @@ import { CheckCircle2, ShoppingBag, ArrowRight } from "lucide-react";
 import { Button } from "../atoms/button.jsx";
 import { useCart } from "../../context/CartContext.jsx";
 import { ordersApi } from "../../services/api.js";
+import { productsService } from "../../services/productsService.js";
 
 export function SuccessPage() {
   const [searchParams] = useSearchParams();
-  const { clearCart } = useCart();
+  const { items, clearCart } = useCart();
   const [status, setStatus] = useState("Atualizando pedido...");
   
   const orderId = searchParams.get("order_id");
 
   useEffect(() => {
     const finalizeOrder = async () => {
-      // Limpa o carrinho de compras do cliente obrigatoriamente
+      // 1. Deduz estoque REAL no Supabase antes que o carrinho de compras seja limpo localmente
+      if (items && items.length > 0) {
+        await productsService.decreaseStock(items);
+      }
+
+      // 2. Limpa o carrinho de compras do cliente obrigatoriamente
       clearCart();
 
       // Atualiza o pedido como pago via API se tivermos um Order ID do Supabase

@@ -159,7 +159,7 @@ function OrdersSection({ onBack }) {
                                     >
                                         <span className="text-foreground/80">
                                             {item.quantity}x{" "}
-                                            {item.product?.name || "Produto"}
+                                            {item.name || "Produto"}
                                         </span>
                                         <span className="font-medium text-foreground">
                                             {new Intl.NumberFormat("pt-BR", {
@@ -226,11 +226,11 @@ const RenderMainContent = ({
                                 </span>
                             </div>
                             <div className="flex-1 text-muted-foreground uppercase">
-                                {user?.name || "NOME NÃO INFORMADO"}
+                                {user?.user_metadata?.name || user?.name || "NOME NÃO INFORMADO"}
                             </div>
                             <button
                                 onClick={() =>
-                                    onEdit("name", "Nome Completo", user?.name)
+                                    onEdit("name", "Nome Completo", user?.user_metadata?.name || user?.name)
                                 }
                                 className="text-primary font-bold text-sm hover:underline mt-2 md:mt-0 cursor-pointer"
                             >
@@ -437,9 +437,38 @@ export function UserPage({ onBack }) {
     };
 
     const handleSave = async () => {
-        console.log(`Salvando ${editingField.key}: ${tempValue}`);
-        toast.success(`${editingField.label} atualizado com sucesso!`);
-        setIsEditModalOpen(false);
+        try {
+            console.log(`Salvando ${editingField.key}: ${tempValue}`);
+            
+            let updatePayload = {};
+            if (editingField.key === "name") {
+                updatePayload = { data: { name: tempValue } }; // O Supabase salva atributos customizados dentro de data (user_metadata)
+            } else if (editingField.key === "email") {
+                updatePayload = { email: tempValue };
+            }
+
+            // Envia a instrução de atualização para o Supabase
+            const { data, error } = await supabase.auth.updateUser(updatePayload);
+            
+            if (error) {
+                throw error;
+            }
+
+            toast.success(`${editingField.label} atualizado com sucesso!`);
+            setIsEditModalOpen(false);
+            
+            // Recarrega a página de forma sutil para o AuthProvider resgatar a sessão novinha em folha com os novos dados
+            window.location.reload();
+            
+        } catch (error) {
+            console.error("Erro detalhado da atualização:", error);
+            // Mensagens customizadas amigáveis em caso de erro
+            if (error.message?.includes("Email rate limit exceeded")) {
+                toast.error("Você pediu para mudar de e-mail muitas vezes. Tente novamente mais tarde.");
+            } else {
+                toast.error("Ocorreu um erro ao atualizar seus dados.");
+            }
+        }
     };
 
     const menuItems = [
@@ -490,15 +519,15 @@ export function UserPage({ onBack }) {
                 >
                     <div className="flex items-center gap-3">
                         <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center relative flex-shrink-0">
-                            <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
-                                {user?.name
-                                    ? user.name.charAt(0).toUpperCase()
+                            <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg uppercase">
+                                {(user?.user_metadata?.name || user?.name)
+                                    ? (user?.user_metadata?.name || user?.name).charAt(0)
                                     : "C"}
                             </div>
                         </div>
                         <div>
                             <p className="font-semibold text-lg line-clamp-1">
-                                {user?.name || "CLIENTE"}
+                                {user?.user_metadata?.name || user?.name || "CLIENTE"}
                             </p>
                             <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                 <span className="font-bold text-primary">
@@ -527,11 +556,10 @@ export function UserPage({ onBack }) {
                                         onClick={() =>
                                             handleNavigation(item.id)
                                         }
-                                        className={`w-full text-left flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors ${
-                                            isActive
-                                                ? "bg-primary text-primary-foreground"
-                                                : "text-foreground hover:bg-muted"
-                                        }`}
+                                        className={`w-full text-left flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors ${isActive
+                                            ? "bg-primary text-primary-foreground"
+                                            : "text-foreground hover:bg-muted"
+                                            }`}
                                     >
                                         <div className="flex items-center gap-3">
                                             <item.icon className="h-4 w-4" />

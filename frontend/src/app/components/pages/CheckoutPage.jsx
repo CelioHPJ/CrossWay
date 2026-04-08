@@ -7,6 +7,7 @@ import { Button } from "../atoms/button.jsx";
 import { Input } from "../atoms/Input.jsx";
 import { MapPin, CreditCard, QrCode, ChevronLeft, Loader2 } from "lucide-react";
 import { supabase } from "../../../utils/supabase/client.js";
+import { toast } from "sonner";
 
 // ==========================================
 // FUNÇÕES DE MÁSCARA (REGEX)
@@ -48,6 +49,13 @@ const maskCVV = (value) => {
   return value.replace(/\D/g, "").slice(0, 4); // Apenas números, max 4 dígitos
 };
 
+const FormField = ({ error, children, className }) => (
+  <div className={`flex flex-col ${className || ""}`}>
+    {children}
+    {error && <span className="text-red-500 text-xs mt-1 animate-in fade-in slide-in-from-top-1">{error}</span>}
+  </div>
+);
+
 export function CheckoutPage() {
   const { user } = useAuth();
   const { items, totalPrice } = useCart();
@@ -57,6 +65,7 @@ export function CheckoutPage() {
   // ==========================================
   // ESTADO CENTRALIZADO DO FORMULÁRIO
   // ==========================================
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     email: "",
     phone: "",
@@ -82,7 +91,7 @@ export function CheckoutPage() {
       if (user) {
         // Pega o nome do metadata (se cadastrou com nome) ou usa o email como fallback
         const userName = user.user_metadata?.full_name || user.user_metadata?.name || "";
-        
+
         setFormData((prev) => ({
           ...prev,
           countName: userName
@@ -111,9 +120,41 @@ export function CheckoutPage() {
       ...prev,
       [name]: formattedValue
     }));
+
+    // Remove o erro assim que o usuário edita
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleCheckout = async () => {
+    const newErrors = {};
+
+    // Validação do Contato
+    if (!formData.email) newErrors.email = "Campo obrigatório";
+    if (!formData.phone) newErrors.phone = "Campo obrigatório";
+    if (!formData.taxId) newErrors.taxId = "Campo obrigatório";
+
+    // Validação do Endereço
+    if (!formData.cep) newErrors.cep = "Campo obrigatório";
+    if (!formData.street) newErrors.street = "Campo obrigatório";
+    if (!formData.number) newErrors.number = "Campo obrigatório";
+    if (!formData.neighborhood) newErrors.neighborhood = "Campo obrigatório";
+    if (!formData.city) newErrors.city = "Campo obrigatório";
+
+    // Validação do Cartão de Crédito
+    if (paymentMethod === "credit_card") {
+      if (!formData.cardNumber) newErrors.cardNumber = "Campo obrigatório";
+      if (!formData.cardName) newErrors.cardName = "Campo obrigatório";
+      if (!formData.cardExpiry) newErrors.cardExpiry = "Campo obrigatório";
+      if (!formData.cardCvv) newErrors.cardCvv = "Campo obrigatório";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return; // Interrompe se houver erros
+    }
+
     setIsProcessing(true);
 
     try {
@@ -152,7 +193,7 @@ export function CheckoutPage() {
       console.log("Chamando Edge Function de forma direta...");
 
       // Faz um fetch direto pro ambiente localhost sem precisar "quebrar" o .env pro restante do site
-      const response = await fetch("http://127.0.0.1:54321/functions/v1/create-checkout", {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -173,7 +214,7 @@ export function CheckoutPage() {
 
     } catch (error) {
       console.error("Erro no checkout:", error);
-      alert("Houve um erro ao processar seu pagamento. Confira o console para detalhes.");
+      toast.error("Houve um erro ao processar seu pagamento. Confira o console para detalhes.");
     } finally {
       setIsProcessing(false);
     }
@@ -208,31 +249,40 @@ export function CheckoutPage() {
                 Contato
               </h2>
               <div className="space-y-4">
-                <Input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="E-mail"
-                  className="h-12 rounded-none border-gray-300 focus-visible:ring-black"
-                />
-                <Input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="Telefone / WhatsApp (Ex: 35 99999-9999)"
-                  className="h-12 rounded-none border-gray-300 focus-visible:ring-black"
-                />
+                <FormField error={errors.email}>
+                  <Input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="E-mail"
+                    className="h-12 rounded-none border-gray-300 focus-visible:ring-black"
+                    aria-invalid={!!errors.email}
+                  />
+                </FormField>
+                <FormField error={errors.phone}>
+                  <Input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="Telefone / WhatsApp (Ex: 35 99999-9999)"
+                    className="h-12 rounded-none border-gray-300 focus-visible:ring-black"
+                    aria-invalid={!!errors.phone}
+                  />
+                </FormField>
 
-                <Input
-                  type="text"
-                  name="taxId"
-                  value={formData.taxId}
-                  onChange={handleInputChange}
-                  placeholder="CPF"
-                  className="h-12 rounded-none border-gray-300 focus-visible:ring-black"
-                />
+                <FormField error={errors.taxId}>
+                  <Input
+                    type="text"
+                    name="taxId"
+                    value={formData.taxId}
+                    onChange={handleInputChange}
+                    placeholder="CPF"
+                    className="h-12 rounded-none border-gray-300 focus-visible:ring-black"
+                    aria-invalid={!!errors.taxId}
+                  />
+                </FormField>
               </div>
             </section>
 
@@ -245,48 +295,65 @@ export function CheckoutPage() {
                 Endereço de Entrega
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  name="cep"
-                  value={formData.cep}
-                  onChange={handleInputChange}
-                  placeholder="CEP"
-                  className="h-12 rounded-none border-gray-300 md:col-span-2"
-                />
-                <Input
-                  name="street"
-                  value={formData.street}
-                  onChange={handleInputChange}
-                  placeholder="Rua / Avenida"
-                  className="h-12 rounded-none border-gray-300 md:col-span-2"
-                />
-                <Input
-                  name="number"
-                  value={formData.number}
-                  onChange={handleInputChange}
-                  placeholder="Número"
-                  className="h-12 rounded-none border-gray-300"
-                />
-                <Input
-                  name="complement"
-                  value={formData.complement}
-                  onChange={handleInputChange}
-                  placeholder="Complemento"
-                  className="h-12 rounded-none border-gray-300"
-                />
-                <Input
-                  name="neighborhood"
-                  value={formData.neighborhood}
-                  onChange={handleInputChange}
-                  placeholder="Bairro"
-                  className="h-12 rounded-none border-gray-300"
-                />
-                <Input
-                  name="city"
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  placeholder="Cidade"
-                  className="h-12 rounded-none border-gray-300"
-                />
+                <FormField error={errors.cep} className="md:col-span-2">
+                  <Input
+                    name="cep"
+                    value={formData.cep}
+                    onChange={handleInputChange}
+                    placeholder="CEP"
+                    className="h-12 rounded-none border-gray-300"
+                    aria-invalid={!!errors.cep}
+                  />
+                </FormField>
+                <FormField error={errors.street} className="md:col-span-2">
+                  <Input
+                    name="street"
+                    value={formData.street}
+                    onChange={handleInputChange}
+                    placeholder="Rua / Avenida"
+                    className="h-12 rounded-none border-gray-300"
+                    aria-invalid={!!errors.street}
+                  />
+                </FormField>
+                <FormField error={errors.number}>
+                  <Input
+                    name="number"
+                    value={formData.number}
+                    onChange={handleInputChange}
+                    placeholder="Número"
+                    className="h-12 rounded-none border-gray-300"
+                    aria-invalid={!!errors.number}
+                  />
+                </FormField>
+                <FormField error={errors.complement}>
+                  <Input
+                    name="complement"
+                    value={formData.complement}
+                    onChange={handleInputChange}
+                    placeholder="Complemento (Opcional)"
+                    className="h-12 rounded-none border-gray-300"
+                  />
+                </FormField>
+                <FormField error={errors.neighborhood}>
+                  <Input
+                    name="neighborhood"
+                    value={formData.neighborhood}
+                    onChange={handleInputChange}
+                    placeholder="Bairro"
+                    className="h-12 rounded-none border-gray-300"
+                    aria-invalid={!!errors.neighborhood}
+                  />
+                </FormField>
+                <FormField error={errors.city}>
+                  <Input
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    placeholder="Cidade"
+                    className="h-12 rounded-none border-gray-300"
+                    aria-invalid={!!errors.city}
+                  />
+                </FormField>
               </div>
             </section>
 
@@ -318,36 +385,48 @@ export function CheckoutPage() {
 
               {paymentMethod === "credit_card" && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                  <Input
-                    name="cardNumber"
-                    value={formData.cardNumber}
-                    onChange={handleInputChange}
-                    placeholder="Número do Cartão"
-                    className="h-12 rounded-none border-gray-300"
-                  />
-                  <Input
-                    name="cardName"
-                    value={formData.cardName}
-                    onChange={handleInputChange}
-                    placeholder="Nome impresso no cartão"
-                    className="h-12 rounded-none border-gray-300"
-                  />
+                  <FormField error={errors.cardNumber}>
+                    <Input
+                      name="cardNumber"
+                      value={formData.cardNumber}
+                      onChange={handleInputChange}
+                      placeholder="Número do Cartão"
+                      className="h-12 rounded-none border-gray-300"
+                      aria-invalid={!!errors.cardNumber}
+                    />
+                  </FormField>
+                  <FormField error={errors.cardName}>
+                    <Input
+                      name="cardName"
+                      value={formData.cardName}
+                      onChange={handleInputChange}
+                      placeholder="Nome impresso no cartão"
+                      className="h-12 rounded-none border-gray-300"
+                      aria-invalid={!!errors.cardName}
+                    />
+                  </FormField>
                   <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      name="cardExpiry"
-                      value={formData.cardExpiry}
-                      onChange={handleInputChange}
-                      placeholder="Validade (MM/AA)"
-                      className="h-12 rounded-none border-gray-300"
-                    />
-                    <Input
-                      name="cardCvv"
-                      type="password"
-                      value={formData.cardCvv}
-                      onChange={handleInputChange}
-                      placeholder="CVV"
-                      className="h-12 rounded-none border-gray-300"
-                    />
+                    <FormField error={errors.cardExpiry}>
+                      <Input
+                        name="cardExpiry"
+                        value={formData.cardExpiry}
+                        onChange={handleInputChange}
+                        placeholder="Validade (MM/AA)"
+                        className="h-12 rounded-none border-gray-300"
+                        aria-invalid={!!errors.cardExpiry}
+                      />
+                    </FormField>
+                    <FormField error={errors.cardCvv}>
+                      <Input
+                        name="cardCvv"
+                        type="password"
+                        value={formData.cardCvv}
+                        onChange={handleInputChange}
+                        placeholder="CVV"
+                        className="h-12 rounded-none border-gray-300"
+                        aria-invalid={!!errors.cardCvv}
+                      />
+                    </FormField>
                   </div>
                 </div>
               )}
